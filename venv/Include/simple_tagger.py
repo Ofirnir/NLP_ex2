@@ -22,7 +22,7 @@ class simple_tagger:
         word_level_acc = 0.0
         for sentence in data:
             for word in sentence:
-                count+=1
+                count += 1
                 if word[0]  in self.mapping:
                     if self.mapping[word [0]] == word[1] : word_level_acc += 1
                 else: self.mapping[word[0]] = word[1]

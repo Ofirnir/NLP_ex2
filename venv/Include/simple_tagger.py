@@ -20,11 +20,17 @@ class simple_tagger:
     def evaluate(self,data):
         count = 0
         word_level_acc = 0.0
+        sentence_level_acc =0.0
         for sentence in data:
+            correct_sentence = True
             for word in sentence:
                 count += 1
                 if word[0]  in self.mapping:
                     if self.mapping[word [0]] == word[1] : word_level_acc += 1
-                else: self.mapping[word[0]] = word[1]
+                    else :
+                        correct_sentence = False
+                else:
+                    self.mapping[word[0]] = sentence[ count % len(sentence) ][1] #assign random tag
+            if correct_sentence:  sentence_level_acc += 1
 
-        return word_level_acc / count
+        return word_level_acc / count , sentence_level_acc /len(data)

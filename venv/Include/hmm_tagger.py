@@ -91,13 +91,26 @@ class hmm_tagger:
                 word = sentence[i][0]
                 label = sentence[i][1]
                 if word not in self.unique_words:
-                    seq = vt.viterbi(word_list, self.A, self.B, self.Pi)
+                    if len(word_list) > 0:
+                        seq = vt.viterbi(word_list, self.A, self.B, self.Pi)
                     word_list.clear()
                     word_acc, sentence_acc = self.comparisons(begin_index, i, sentence, seq)
+                    correct_sentence = correct_sentence and sentence_acc
                     word_level_acc += word_acc
-                word_list[i] = self.unique_words[word]
-            last_index = len(sentence)
-            seq = vt.viterbi(word_list, self.A, self.B, self.Pi)
+                    rand_lable= np.random.randint(0,len(self.A)) #Assign random label
+                    begin_index = i+1
+                    if rand_lable == label:
+                        word_level_acc += 1
+                else:
+                    word_list.append(self.unique_words[word])
+            if len(word_list) > 0:
+                seq = vt.viterbi(word_list, self.A, self.B, self.Pi)
+            word_acc, sentence_acc = self.comparisons(begin_index, len(sentence), sentence, seq)
+            correct_sentence = correct_sentence and sentence_acc
+            word_level_acc += word_acc
+            if correct_sentence:
+                sentence_level_acc += 1
+        return word_level_acc/count_words,sentence_level_acc / len(data)
 
 
 
